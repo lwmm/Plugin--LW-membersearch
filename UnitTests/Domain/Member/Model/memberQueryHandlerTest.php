@@ -26,7 +26,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         //TRUNCATE Table
     }
 
-    public function testloadMemberById_WithExistingId($id, $intern)
+    public function testloadMemberById_WithExistingId()
     {
         // intern = (false) and id = (from a member that is not intern)
         // check if correct member was returned
@@ -38,25 +38,25 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if correct member was returned
     }
     
-    public function testloadMemberById_WithNotExistingId($id, $intern)
+    public function testloadMemberById_WithNotExistingId()
     {
         // intern = (false)        
         // check if Exception is thrown
     }
     
-    public function testloadMemberById_WithIdIsFalse($id, $intern)
+    public function testloadMemberById_WithIdIsFalse()
     {
         // intern = (false)
         // check if method throws an exception, telling the given ID doesn't exist
     }
 
-    public function testloadMemberById_WithIdIsNotNumeric($id, $intern)
+    public function testloadMemberById_WithIdIsNotNumeric()
     {
         // intern = (false)        
         // check if method throws an exception, telling the given ID isn't numeric
     }
     
-    public function testLoadAllMembers_WithDemoContent($intern)
+    public function testLoadAllMembers_WithDemoContent()
     {
         // intern = (false)
         // check if all members from the demo content are present that are not intern
@@ -65,14 +65,14 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if all members from the demo content are present
     }
     
-    public function testLoadAllMembers_WithoutDemoContent($intern)
+    public function testLoadAllMembers_WithoutDemoContent()
     {
         // truncate table
         // intern = (false)
         // check if an empty array is returned
     }
     
-    public function testLoadMembersByDepartment_WithExistingDepartment($department, $intern)
+    public function testLoadMembersByDepartment_WithExistingDepartment()
     {
         // intern = (false)
         // check if an array with all members and only members from the given Department, that are not intern, is returned
@@ -81,12 +81,12 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if an array with all members and only members from the given Department is returned
     }
     
-    public function testLoadMembersByDepartment_WithNotExistingDepartment($department, $intern)
+    public function testLoadMembersByDepartment_WithNotExistingDepartment()
     {
         // check if an empty array is returned
     }
     
-    public function testLoadMembersByName_WithExistingName($name, $intern)
+    public function testLoadMembersByName_WithExistingName()
     {
         // intern = (false)
         // check if an array with all members and only members with the given first name, that are not intern, is returned
@@ -95,12 +95,12 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if an array with all members and only members with the given first name is returned
     }
 
-    public function testLoadMembersByName_WithNotExistingName($name, $intern)
+    public function testLoadMembersByName_WithNotExistingName()
     {
         // check if an empty array is returned
     }
 
-    public function testLoadMembersByLocation_WithExistingLocation($location, $intern)
+    public function testLoadMembersByLocation_WithExistingLocation()
     {
         // intern = (false)
         // check if an array with all members and only members from the given location, that are not intern, is returned
@@ -109,12 +109,12 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if an array with all members and only members from the given location is returned
     }
 
-    public function testLoadMembersByLocation_WithNotExistingLocation($location, $intern)
+    public function testLoadMembersByLocation_WithNotExistingLocation()
     {
         // check if an empty array is returned
     }
 
-    public function testLoadMembersByFilter_WithEmptyFilter($filterArray, $intern)
+    public function testLoadMembersByFilter_WithEmptyFilter()
     {
         // intern = (false)
         // check if all members from the demo content, that are not intern, are present
@@ -123,7 +123,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if all members from the demo content are present
     }
     
-    public function testLoadMembersByFilter_WithCompleteValidFilter($filterArray, $intern)
+    public function testLoadMembersByFilter_WithCompleteValidFilter()
     {
         // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
         // choose filter values, that will return at least 2 members (intern and not intern) form the demo content
@@ -135,7 +135,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if all members from the demo content for that filter are present
     }
     
-    public function testLoadMembersByFilter_WithInValidFilter($filterArray, $intern)
+    public function testLoadMembersByFilter_WithInValidFilter()
     {
         // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
         // with only lastname is invalid

@@ -4,9 +4,10 @@ namespace lwMembersearch\Domain\Member\Model;
 
 class memberQueryHandler
 {
-    public function __construct($db)
+    public function __construct($db, $tableName)
     {
         $this->db = $db;
+        $this->tableName = $tableName;
     }
 
     public function loadMemberById($id, $intern=false)

@@ -39,68 +39,68 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
          */
     }
     
-    public function testAddMember_EmptyArray($array)
+    public function testAddMember_EmptyArray()
     {
         // check if add member throws Exception, if an empty Array was given
     }
     
-    public function testAddMember_FullValidArray($array)
+    public function testAddMember_FullValidArray()
     {
         // check if add member works, with a full and valid Array
     }
     
-    public function testAddMember_InValidArray($array)
+    public function testAddMember_InValidArray()
     {
         // check if add member throws Exception, if an invalid array was given
     }
     
-    public function testAddMember_MinimalValidArray($array)
+    public function testAddMember_MinimalValidArray()
     {
         // check if add member works, if a minimal valid array was given
         // minimal means: at least name is given and the automatic first/last date was saved
     }
     
-    public function testSaveMember_EmptyArray($id, $array)
+    public function testSaveMember_EmptyArray()
     {
         // check if save member throws Exception, if an empty Array was given
     }
     
-    public function testSaveMember_FullValidArray($id, $array)
+    public function testSaveMember_FullValidArray()
     {
         // check if save member works, with a full and valid Array
     }
     
-    public function testSaveMember_InValidArray($id, $array)
+    public function testSaveMember_InValidArray()
     {
         // check if save member throws Exception, if an invalid array was given
     }
     
-    public function testSaveMember_MinimalValidArray($id, $array)
+    public function testSaveMember_MinimalValidArray()
     {
         // check if save member works, if a minimal valid array was given
         // minimal means: at least the id is given and the automatic first/last date was saved
     }
     
-    public function testDeleteMember_WithExistingId($id)
+    public function testDeleteMember_WithExistingId()
     {
         // add a new member and put ID in variable (id must be 1)
-        // delete member with the given $id (which should be 1)
+        // delete member with the given  (which should be 1)
         // check if delete works (member with id is deleted
     }
     
-    public function testDeleteMember_WithNotExistingId($id)
+    public function testDeleteMember_WithNotExistingId()
     {
         // add a new member and put ID in variable (id must be 1)
-        // delete member with an $id other than 1
+        // delete member with an  other than 1
         // check if delete throws an exception, telling the given ID doesn't exist
     }
     
-    public function testDeleteMember_WithIdIsFalse($id)
+    public function testDeleteMember_WithIdIsFalse()
     {
         // check if delete throws an exception, telling that no ID was given
     }
 
-    public function testDeleteMember_WithIdIsNotNumeric($id)
+    public function testDeleteMember_WithIdIsNotNumeric()
     {
         // check if delete throws an exception, telling that the given ID is not numeric
     }
