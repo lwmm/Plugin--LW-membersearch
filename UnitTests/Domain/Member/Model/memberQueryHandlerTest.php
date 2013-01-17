@@ -26,7 +26,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         //TRUNCATE Table
     }
 
-    public function testGetMemberById_WithExistingId($id, $intern)
+    public function testloadMemberById_WithExistingId($id, $intern)
     {
         // intern = (false) and id = (from a member that is not intern)
         // check if correct member was returned
@@ -38,19 +38,19 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // check if correct member was returned
     }
     
-    public function testGetMemberById_WithNotExistingId($id, $intern)
+    public function testloadMemberById_WithNotExistingId($id, $intern)
     {
         // intern = (false)        
         // check if Exception is thrown
     }
     
-    public function testGetMemberById_WithIdIsFalse($id, $intern)
+    public function testloadMemberById_WithIdIsFalse($id, $intern)
     {
         // intern = (false)
         // check if method throws an exception, telling the given ID doesn't exist
     }
 
-    public function testGetMemberById_WithIdIsNotNumeric($id, $intern)
+    public function testloadMemberById_WithIdIsNotNumeric($id, $intern)
     {
         // intern = (false)        
         // check if method throws an exception, telling the given ID isn't numeric
