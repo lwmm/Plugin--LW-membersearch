@@ -1,0 +1,12 @@
+<h1>Geschäftsbereich</h1>
+<form action="<?php echo $this->actionUrl; ?>" method="post">
+    
+    <div>
+        Kürzel: <input type="text" name="opt1text" value="<?php echo $this->entity['opt1text']; ?>" />
+    </div>
+    <div>
+        Name: <input type="text" name="name" value="<?php echo $this->entity['name']; ?>" />
+    </div>
+    
+    <input type="submit" value="speichern" />
+</form>
