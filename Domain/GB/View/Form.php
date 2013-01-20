@@ -31,6 +31,13 @@ class Form
         }
         $this->gb->renderView($this->view);
         $this->view->backUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"showGbList"));
+        
+        if ($this->view->type != "add") {
+            $form = new \lwMembersearch\Domain\FB\View\FbList();
+            $this->view->FbList = $form->render();
+            $this->view->showFbList = true;
+        }
+        
         return $this->view->render();
     }
 }

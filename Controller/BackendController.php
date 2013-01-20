@@ -56,7 +56,7 @@ class BackendController
             $this->response->setReloadCmd('showGbList', array('response'=>1));
             return $this->response;
         }
-        catch (validationErrorsException $e) {
+        catch (\LWddd\validationErrorsException $e) {
             return $this->addGbFormAction($e->getErrors());
         }
     }
@@ -70,6 +70,55 @@ class BackendController
         return $this->returnRenderedView($formView);
     }
     
+    protected function addFbFormAction($errors=false)
+    {
+        $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
+        $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
+        $formView = new \lwMembersearch\Domain\FB\View\Form('add', $entity);
+        $formView->setErrors($errors);
+        return $this->returnRenderedView($formView);
+    }
+    
+    protected function addFbAction()
+    {
+        try {
+            $dataValueObject = new \LWddd\ValueObject(array_merge(array("category_id"=>$this->request->getInt("category_id")), $this->request->getPostArray()));
+            $result = $this->dic->getFbRepository()->saveObject(false, $dataValueObject);
+            $this->response->setReloadCmd('editGbForm', array('response'=>1, 'id'=>$this->request->getInt("category_id")));
+            return $this->response;
+        }
+        catch (\LWddd\validationErrorsException $e) {
+            return $this->addFbFormAction($e->getErrors());
+        }
+    }
+    
+    protected function editFbFormAction($errors=false)
+    {
+        if ($errors) {
+           $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
+            $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
+        }
+        else {
+            $entity = $this->dic->getFbRepository()->getObjectById($this->request->getInt("id"));
+        }
+        $formView = new \lwMembersearch\Domain\FB\View\Form('edit', $entity);
+        $formView->setErrors($errors);
+        return $this->returnRenderedView($formView);
+    }
+    
+    protected function saveFbAction()
+    {
+        try {
+            $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
+            $result = $this->dic->getFbRepository()->saveObject($this->request->getInt("id"), $dataValueObject);
+            $this->response->setReloadCmd('editGbForm', array('response'=>1, 'id'=>$this->request->getInt("category_id")));
+            return $this->response;
+        }
+        catch (\LWddd\validationErrorsException $e) {
+            return $this->editGbFormAction($e->getErrors());
+        }
+    }    
+    
     protected function saveGbAction()
     {
         try {
@@ -78,8 +127,8 @@ class BackendController
             $this->response->setReloadCmd('showGbList', array('response'=>1));
             return $this->response;
         }
-        catch (validationErrorsException $e) {
-            return $this->addGbFormAction($e->getErrors());
+        catch (\LWddd\validationErrorsException $e) {
+            return $this->editGbFormAction($e->getErrors());
         }
     }
     

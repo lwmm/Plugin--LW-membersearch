@@ -1,6 +1,6 @@
 <?php
 
-namespace lwMembersearch\Domain\GB\Specification;
+namespace lwMembersearch\Domain\FB\Specification;
 
 define("LW_REQUIRED_ERROR", "1");
 define("LW_MAXLENGTH_ERROR", "2");
@@ -12,6 +12,7 @@ class isValid extends \LWddd\Validator
         $this->allowedKeys = array(
                 "id",
                 "name",
+                "category_id",
                 "opt1text",
                 "lw_object",
                 "lw_first_date",
@@ -23,7 +24,7 @@ class isValid extends \LWddd\Validator
         return new isValid();
     }
     
-    public function isSatisfiedBy(\lwMembersearch\Domain\GB\Object\gb $object)
+    public function isSatisfiedBy(\lwMembersearch\Domain\FB\Object\fb $object)
     {
         $valid = true;
         foreach($this->allowedKeys as $key){
