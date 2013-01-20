@@ -31,7 +31,7 @@ class Form
             }
         }
         $this->object->renderView($this->view);
-        $this->view->backUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"showFbList", "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+        $this->view->backUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"editGbForm", "id"=>$this->dic->getLWRequest()->getInt("category_id")));
         return $this->view->render();
     }
 }
