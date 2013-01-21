@@ -23,11 +23,11 @@ class Form
             $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"addFb", "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
         }
         else {
-            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveFb", "id" => $this->object->getValueByKey('id'), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveFb", "id" => $this->object->getId(), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
             
             if (\lwMembersearch\Domain\FB\Specification\isDeletable::getInstance()->isSatisfiedBy($this->object)) {
                 $this->view->deleteAllowed = true;
-                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteFb","id"=>$this->object->getValueByKey('id'), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteFb","id"=>$this->object->getId(), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
             }
         }
         $this->object->renderView($this->view);

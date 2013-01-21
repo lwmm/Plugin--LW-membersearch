@@ -48,121 +48,68 @@ class BackendController
         return $this->response;
     }
     
+    protected function getDomainFacade($domain)
+    {
+        $class = "\\lwMembersearch\\Domain\\".$domain."\\Facade";
+        $facade = $class::getInstance();
+        $facade->setResponse($this->response);
+        return $facade;
+    }
+    
     protected function addGbAction()
     {
-        try {
-            $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-            $result = $this->dic->getGbRepository()->saveObject(false, $dataValueObject);
-            $this->response->setReloadCmd('showGbList', array('response'=>1));
-            return $this->response;
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            return $this->addGbFormAction($e->getErrors());
-        }
+        return $this->getDomainFacade("GB")->addGB($this->request->getPostArray());
     }
     
     protected function addGbFormAction($errors=false)
     {
-        $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-        $entity = \lwMembersearch\Domain\GB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        $formView = new \lwMembersearch\Domain\GB\View\Form('add', $entity);
-        $formView->setErrors($errors);
-        return $this->returnRenderedView($formView);
-    }
-    
-    protected function addFbFormAction($errors=false)
-    {
-        $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-        $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        $formView = new \lwMembersearch\Domain\FB\View\Form('add', $entity);
-        $formView->setErrors($errors);
-        return $this->returnRenderedView($formView);
-    }
-    
-    protected function addFbAction()
-    {
-        try {
-            $dataValueObject = new \LWddd\ValueObject(array_merge(array("category_id"=>$this->request->getInt("category_id")), $this->request->getPostArray()));
-            $result = $this->dic->getFbRepository()->saveObject(false, $dataValueObject);
-            $this->response->setReloadCmd('editGbForm', array('response'=>1, 'id'=>$this->request->getInt("category_id")));
-            return $this->response;
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            return $this->addFbFormAction($e->getErrors());
-        }
-    }
-    
-    protected function editFbFormAction($errors=false)
-    {
-        if ($errors) {
-           $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-            $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        }
-        else {
-            $entity = $this->dic->getFbRepository()->getObjectById($this->request->getInt("id"));
-        }
-        $formView = new \lwMembersearch\Domain\FB\View\Form('edit', $entity);
-        $formView->setErrors($errors);
-        return $this->returnRenderedView($formView);
-    }
-    
-    protected function saveFbAction()
-    {
-        try {
-            $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-            $result = $this->dic->getFbRepository()->saveObject($this->request->getInt("id"), $dataValueObject);
-            $this->response->setReloadCmd('editGbForm', array('response'=>1, 'id'=>$this->request->getInt("category_id")));
-            return $this->response;
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            return $this->editGbFormAction($e->getErrors());
-        }
-    }    
-    
-    protected function saveGbAction()
-    {
-        try {
-            $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-            $result = $this->dic->getGbRepository()->saveObject($this->request->getInt("id"), $dataValueObject);
-            $this->response->setReloadCmd('showGbList', array('response'=>1));
-            return $this->response;
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            return $this->editGbFormAction($e->getErrors());
-        }
-    }
-    
-    protected function editGbFormAction($errors=false)
-    {
-        if ($errors) {
-           $dataValueObject = new \LWddd\ValueObject($this->request->getPostArray());
-            $entity = \lwMembersearch\Domain\GB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        }
-        else {
-            $entity = $this->dic->getGbRepository()->getObjectById($this->request->getInt("id"));
-        }
-        $formView = new \lwMembersearch\Domain\GB\View\Form('edit', $entity);
-        $formView->setErrors($errors);
-        return $this->returnRenderedView($formView);
+        return $this->getDomainFacade("GB")->getGbAddForm($this->request->getPostArray(), $errors);
     }
     
     protected function deleteGbAction()
     {
-        try {
-            $repository = $this->dic->getGbRepository();
-            $ok = $repository->deleteObjectById($this->request->getInt("id"));
-            $this->response->setReloadCmd('showGbList', array('response'=>2));
-            return $this->response;
-        }
-        catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }        
+        return $this->getDomainFacade("GB")->deleteGbById($this->request->getInt("id"));
+    }    
+    
+    protected function saveGbAction()
+    {
+        return $this->getDomainFacade("GB")->saveGB($this->request->getInt("id"), $this->request->getPostArray());
     }
+    
+    protected function editGbFormAction($errors=false)
+    {
+        return $this->getDomainFacade("GB")->getGbEditForm($this->request->getInt("id"), $this->request->getPostArray(), $errors);
+    }    
     
     protected function showGbListAction()
     {
-        return $this->returnRenderedView(new \lwMembersearch\Domain\GB\View\GbList());
+        return $this->getDomainFacade("GB")->showGbList();
+    }    
+    
+    protected function addFbFormAction($errors=false)
+    {
+        return $this->getDomainFacade("FB")->getFbAddForm($this->request->getPostArray(), $errors);
     }
+    
+    protected function addFbAction()
+    {
+        return $this->getDomainFacade("FB")->addFb($this->request->getInt("category_id"), $this->request->getPostArray());
+    }
+    
+    protected function editFbFormAction($errors=false)
+    {
+        return $this->getDomainFacade("FB")->getFbEditForm($this->request->getInt("id"), $this->request->getPostArray(), $errors);
+    }
+    
+    protected function saveFbAction()
+    {
+        return $this->getDomainFacade("FB")->saveFb($this->request->getInt("category_id"), $this->request->getInt("id"), $this->request->getPostArray());
+    }
+    
+    protected function deleteFbAction()
+    {
+        return $this->getDomainFacade("FB")->deleteFbById($this->request->getInt("category_id"), $this->request->getInt("id"));
+    }    
     
     protected function buildBackendMenuAction()
     {
