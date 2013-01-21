@@ -9,22 +9,12 @@ class dic
         
     }
     
-    public function getGbFilter()
-    {
-        if (!$this->GbFilter) {
-            $this->GbFilter = new \lwMembersearch\Domain\GB\Service\Filter();
-        }
-        return $this->GbFilter;
-        
-    }
-  
     public function getGbRepository()
     {
         if (!$this->GbRepository) {
             $this->GbRepository = new \lwMembersearch\Domain\GB\Model\Repository();
         }
         return $this->GbRepository;        
-        
     }
   
     public function getFbRepository()
@@ -33,16 +23,6 @@ class dic
             $this->FbRepository = new \lwMembersearch\Domain\FB\Model\Repository();
         }
         return $this->FbRepository;        
-        
-    }
-  
-    public function getFbFilter()
-    {
-        if (!$this->FbFilter) {
-            $this->FbFilter = new \lwMembersearch\Domain\FB\Service\Filter();
-        }
-        return $this->FbFilter;
-        
     }
   
     public function getDbObject()
@@ -64,5 +44,4 @@ class dic
     {
         return \lw_registry::getInstance()->getEntry("request");
     }
-    
 }
