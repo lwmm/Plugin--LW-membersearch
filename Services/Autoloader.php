@@ -1,8 +1,8 @@
 <?php
 
-namespace lwMembersearch\Service\Autoloader;
+namespace lwMembersearch\Services;
 
-class lwMembersearchAutoloader
+class Autoloader
 {
     public function __construct()
     {
@@ -26,8 +26,9 @@ class lwMembersearchAutoloader
             $filename = str_replace('lwMembersearch', $path.'/lw_membersearch', $className);
         }
         $filename = str_replace('\\', '/', $filename).'.php';
-
+        
         if (is_file($filename)) {
+            //echo $filename." exists<br>";
             include_once($filename);
         }
     }

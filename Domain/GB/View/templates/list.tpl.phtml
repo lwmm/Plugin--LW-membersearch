@@ -1,0 +1,33 @@
+<h1>Geschäftsbereiche</h1>
+<div>
+    <a href="<?php echo $this->backUrl; ?>">zurück zum Menu</a> | <a href="<?php echo $this->newUrl; ?>">neuen GB anlegen</a>
+</div>
+<br/>
+<table>
+    
+    <?php 
+        if ($this->gbs->count()>0):
+            foreach($this->gbs as $gb): ?>
+    <tr>
+        <td>
+            <?php echo $gb->getValueByKey('opt1text'); ?>
+        </td>
+        <td>
+            <?php echo $gb->getValueByKey('name'); ?>
+        </td>
+        <td>
+            <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editGbForm', "id"=>$gb->getValueByKey('id'))); ?>">bearbeiten</a>
+        </td>
+        <td>
+            <?php if($this->deletableSpecification->isSatisfiedBy($gb)): ?>
+            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteGb', "id"=>$gb->getValueByKey('id'))); ?>">löschen</a>
+            <?php endif; ?>
+        </td>
+    </tr>
+        <?php 
+            endforeach; 
+        else: ?>
+    <div>Keine GB vorhanden!</div>
+    <?php endif; ?>
+    
+</table>

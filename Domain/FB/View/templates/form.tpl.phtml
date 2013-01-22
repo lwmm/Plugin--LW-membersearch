@@ -1,0 +1,50 @@
+<?php
+
+    function showError($error)
+    {
+        if($error): ?>
+        <div class="alert alert-block alert-error">
+            <?php foreach($error as $errorcode => $array): ?>
+            <h3 class="alert-heading">Fehler:</h3>
+            <p><?php 
+            
+            switch ($errorcode) {
+                case LW_MAXLENGTH_ERROR:
+                    ?>Die Maximallänge ist überschritten, bitte kürzen sie ihren Eintrag.<?php
+                    break;
+                
+                default:
+                    ?>Der Fehler konnte nicht näher eingegrenzt werden!<?php
+                    break;
+            }
+
+            ?></p>
+            <?php endforeach; ?>
+        </div>
+        <?php endif;
+    }
+
+?>
+<h1>Fachbereich</h1>
+
+<div>
+    <a href="<?php echo $this->backUrl; ?>">zurück</a>
+</div>
+
+<?php if(is_array($this->errors)): ?>
+    <div class="alert page-error"><b>Es gibt Fehler!</b></div>
+<?php endif; ?>
+
+<form action="<?php echo $this->actionUrl; ?>" method="post">
+    
+    <div>
+        Kürzel: <input type="text" name="opt1text" value="<?php echo $this->entity['opt1text']; ?>" />
+        <?php showError($this->errors['opt1text']); ?>
+    </div>
+    <div>
+        Name: <input type="text" name="name" value="<?php echo $this->entity['name']; ?>" />
+        <?php showError($this->errors['name']); ?>
+    </div>
+    
+    <input type="submit" value="speichern" />
+</form>
