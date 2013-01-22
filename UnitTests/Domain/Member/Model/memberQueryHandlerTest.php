@@ -46,7 +46,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->db->pdbquery();
     }
 
-    public function testloadMemberById_WithExistingId($id, $intern)
+    public function testloadMemberById_WithExistingId()
     {
         // intern = (false) and id = (from a member that is not intern)
         // check if correct member was returned
@@ -84,46 +84,16 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 ), $result);
     }
     
-    public function testloadMemberById_WithNotExistingId($id, $intern)
+    public function testloadMemberById_WithNotExistingId()
     {
         // intern = (false)        
-        // check if Exception is thrown
-        try{
-            $this->memberQueryHandler->loadMemberById(999);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"ID is not existing!");
+        // check if empty array was returned
+       
+       $result =  $this->memberQueryHandler->loadMemberById(999);
+       $this->assertEmpty($result);
     }
     
-    public function testloadMemberById_WithIdIsFalse($id, $intern)
-    {
-        // intern = (false)
-        // check if method throws an exception, telling the given ID doesn't exist
-        try{
-            $this->memberQueryHandler->loadMemberById(false);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"ID can't be FALSE!");
-    }
-
-    public function testloadMemberById_WithIdIsNotNumeric($id, $intern)
-    {
-        // intern = (false)        
-        // check if method throws an exception, telling the given ID isn't numeric
-        try{
-            $this->memberQueryHandler->loadMemberById("aa");
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"ID is not numeric!");
-    }
-    
-    public function testLoadAllMembers_WithDemoContent($intern)
+    public function testLoadAllMembers_WithDemoContent()
     {
         // intern = (false)
         // check if all members from the demo content are present that are not intern
@@ -185,14 +155,14 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 )));
         // intern = (true)
         // check if all members from the demo content are present
-        $result = $this->memberQueryHandler->loadAllMembers(true);
-        foreach($result as $entry){
-            unset($entry["id"]);
-            unset($entry["lw_first_date"]);
-            unset($entry["lw_last_date"]);
-            $array[] = $entry;
+        $result2 = $this->memberQueryHandler->loadAllMembers(true);
+        foreach($result2 as $entry2){
+            unset($entry2["id"]);
+            unset($entry2["lw_first_date"]);
+            unset($entry2["lw_last_date"]);
+            $array2[] = $entry2;
         }
-        $this->assertEquals($array, array(
+        $this->assertEquals($array2, array(
             array(
                 "firstname"     => "Max1",
                 "lastname"      => "Mustermann1",
@@ -291,7 +261,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 )));
     }
     
-    public function testLoadAllMembers_WithoutDemoContent($intern)
+    public function testLoadAllMembers_WithoutDemoContent()
     {
         // truncate table
         // intern = (false)
@@ -301,13 +271,11 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($this->memberQueryHandler->loadAllMembers());
     }
     
-    public function testLoadMembersByDepartment_WithExistingDepartment($department, $intern)
+    public function testLoadMembersByDepartment_WithExistingDepartment()
     {
         // intern = (false)
         // check if an array with all members and only members from the given Department, that are not intern, is returned
-        $this->fillTable();
         $array = array();
-        
         $result = $this->memberQueryHandler->loadMembersByDepartment("Office");  
         foreach($result as $value){
             unset($value["id"]);
@@ -460,14 +428,14 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($assertedArray2, $array2);
     }
     
-    public function testLoadMembersByDepartment_WithNotExistingDepartment($department, $intern)
+    public function testLoadMembersByDepartment_WithNotExistingDepartment()
     {
         // check if an empty array is returned
         $result = $this->memberQueryHandler->loadMembersByDepartment("gibtsnicht");
         $this->assertEmpty($result);
     }
     
-    public function testLoadMembersByName_WithExistingName($name, $intern)
+    public function testLoadMembersByName_WithExistingName()
     {
         $array = array(
             array(
@@ -552,14 +520,14 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($arr2,$array);
     }
 
-    public function testLoadMembersByName_WithNotExistingName($name, $intern)
+    public function testLoadMembersByName_WithNotExistingName()
     {
         // check if an empty array is returned
         $result = $this->memberQueryHandler->loadMembersByName("Teemo");
         $this->assertEmpty($result);
     }
 
-    public function testLoadMembersByLocation_WithExistingLocation($location, $intern)
+    public function testLoadMembersByLocation_WithExistingLocation()
     {
         // intern = (false)
         // check if an array with all members and only members from the given location, that are not intern, is returned
@@ -710,14 +678,14 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($arr2, $assertedArray2);
     }
 
-    public function testLoadMembersByLocation_WithNotExistingLocation($location, $intern)
+    public function testLoadMembersByLocation_WithNotExistingLocation()
     {
         $result = $this->memberQueryHandler->loadMembersByLocation("Romolus");
         $this->assertEmpty($result);
         
     }
 
-    public function testLoadMembersByFilter_WithEmptyFilter($filterArray, $intern)
+    public function testLoadMembersByFilter_WithEmptyFilter()
     {
         // intern = (false)
         // check if all members from the demo content, that are not intern, are present
@@ -781,7 +749,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 )
         );
         
-        $this->assertEqulas($arr, $assertedArray);
+        $this->assertEquals($arr, $assertedArray);
         // intern = (true)
         // check if all members from the demo content are present
         $arr2 = array();
@@ -892,10 +860,10 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 )
         );
         
-        $this->assertEqulas($arr2, $assertedArray2);
+        $this->assertEquals($arr2, $assertedArray2);
     }
     
-    public function testLoadMembersByFilter_WithCompleteValidFilter($filterArray, $intern)
+    public function testLoadMembersByFilter_WithCompleteValidFilter()
     {
         // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
         // choose filter values, that will return at least 2 members (intern and not intern) form the demo content
@@ -906,7 +874,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $result = $this->memberQueryHandler->loadMembersByFilter(array("location" => "Germany", "department" => "Office"));
         foreach($result as $value){
             unset($value["id"]);
-            unset($value["lw_fist_date"]);
+            unset($value["lw_first_date"]);
             unset($value["lw_last_date"]);
             $arr[] = $value;
         }
@@ -969,7 +937,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $result2 = $this->memberQueryHandler->loadMembersByFilter(array("location" => "Germany", "department" => "Office"), true);
         foreach($result2 as $value2){
             unset($value2["id"]);
-            unset($value2["lw_fist_date"]);
+            unset($value2["lw_first_date"]);
             unset($value2["lw_last_date"]);
             $arr2[] = $value2;
         }
@@ -1049,81 +1017,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         );
         $this->assertEquals($arr2, $assertedArray2);
     }
-    
-    public function testLoadMembersByFilter_WithInValidFilter($filterArray, $intern)
-    {
-        // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
-        // with only lastname is invalid
-        // check if an Exception is thrown
-        for($i = 0; $i >= 260; $i++){
-            $lastname.= "A";
-        }
-        try{
-            $this->memberQueryHandler->loadMembersByFilter(array("lastname" => $lastname, "firstname" => "Otto", "email" => "k.heinz@autohaus.de", "location" => "Germany", "department" => "Office"));
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Filterarray 'lastname' is invalid!");
         
-        // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
-        // with only firstname is invalid
-        // check if an Exception is thrown
-        
-        for($i = 0; $i >= 260; $i++){
-            $firstname.= "B";
-        }
-        try{
-            $this->memberQueryHandler->loadMembersByFilter(array("lastname" => "Heinz", "firstname" => $firstname, "email" => "k.heinz@autohaus.de", "location" => "Germany", "department" => "Office"));
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Filterarray 'firstname' is invalid!");
-        
-        // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
-        // with only email is invalid
-        // check if an Exception is thrown
-
-        try{
-            $this->memberQueryHandler->loadMembersByFilter(array("lastname" => "Heinz", "firstname" => "Karl", "email" => "kheinzautohausde", "location" => "Germany", "department" => "Office"));
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Filterarray 'email' is invalid!");
-        
-        // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
-        // with only location is invalid
-        // check if an Exception is thrown
-
-        for($i = 0; $i >= 26; $i++){
-            $location.= "L";
-        }
-        try{
-            $this->memberQueryHandler->loadMembersByFilter(array("lastname" => "Heinz", "firstname" => "Karl", "email" => "k.heinz@autohaus.de", "location" => $location, "department" => "Office"));
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Filterarray 'location' is invalid!");
-        
-        // $filterArray = array("lastname"=>"", "firstname", "email"=>"", location=>"", department=>"");
-        // with only department is invalid
-        // check if an Exception is thrown
-        
-        for($i = 0; $i >= 26; $i++){
-            $department.= "D";
-        }
-        try{
-            $this->memberQueryHandler->loadMembersByFilter(array("lastname" => "Heinz", "firstname" => "Karl", "email" => "k.heinz@autohaus.de", "location" => "Germany", "department" => $department));
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Filterarray 'department' is invalid!");
-    }
-    
     public function fillTable()
     {
         $array = array(

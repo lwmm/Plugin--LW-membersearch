@@ -57,51 +57,13 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->db->tableExists($this->db->gt("lw_membersearch")));
     }
     
-    public function testAddMember_EmptyArray()
-    {
-        // check if add member throws Exception, if an empty Array was given
-        try{
-            $this->memberCommandHandler->addMember(array());
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"ERROR: addMember got empty Array");
-    }
-    
     public function testAddMember_FullValidArray()
     {
         // check if add member works, with a full and valid Array
         $this->addEntry();
     }
     
-    public function testAddMember_InValidArray($array)
-    {
-        // check if add member throws Exception, if an invalid array was given
-        for($i = 0; $i >= 260; $i++){
-            $firstname.= "A";
-            $lastname.= "B";
-            $location.= "C";
-            $department.= "D";
-        }
-        $array = array(
-            "firstname"     => $firstname,
-            "lastname"      => $lastname,
-            "email"         => "mmustermannlogicworksde",
-            "location"      => $location,
-            "department"    => $department,
-            "intern"        => "s"
-        );
-        try{
-            $this->memberCommandHandler->addMember($array);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Member-Array is invalid!");
-    }
-    
-    public function testAddMember_MinimalValidArray($array)
+    public function testAddMember_MinimalValidArray()
     {
         // check if add member works, if a minimal valid array was given
         // minimal means: at least name is given and the automatic first/last date was saved
@@ -111,7 +73,7 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "email"         => "",
             "location"      => "",
             "department"    => "",
-            "intern"        => ""
+            "intern"        => 0
         );
         $this->assertTrue($this->memberCommandHandler->addMember($array));
         $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE id = 1 ");
@@ -123,21 +85,7 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($array,$result);
     }
     
-    public function testSaveMember_EmptyArray($id, $array)
-    {
-        // check if save member throws Exception, if an empty Array was given
-        $this->addEntry();
-
-        try{
-            $this->memberCommandHandler->saveMember(1, array());
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Member-Array is empty!");
-    }
-    
-    public function testSaveMember_FullValidArray($id, $array)
+    public function testSaveMember_FullValidArray()
     {
         // check if save member works, with a full and valid Array
         $this->addEntry();
@@ -160,36 +108,7 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($array2,$result2);
     }
     
-    public function testSaveMember_InValidArray($id, $array)
-    {
-        // check if save member throws Exception, if an invalid array was given
-        $this->addEntry();
-        
-        for($i = 0; $i >= 260; $i++){
-            $firstname.= "A";
-            $lastname.= "B";
-            $location.= "C";
-            $department.= "D";
-        }
-        $array = array(
-            "firstname"     => $firstname,
-            "lastname"      => $lastname,
-            "email"         => "mmustermannlogicworksde",
-            "location"      => $location,
-            "department"    => $department,
-            "intern"        => "s"
-        );
-        
-        try{
-            $this->memberCommandHandler->saveMember(1, $array);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Update-Array is invalid!");
-    }
-    
-    public function testSaveMember_MinimalValidArray($id, $array)
+    public function testSaveMember_MinimalValidArray()
     {
         // check if save member works, if a minimal valid array was given
         // minimal means: at least the id is given and the automatic first/last date was saved
@@ -201,18 +120,19 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "email"         => "",
             "location"      => "",
             "department"    => "",
-            "intern"        => ""
+            "intern"        => 0
         );
         
         $this->assertTrue($this->memberCommandHandler->saveMember(1, $array2));
-        $result2 = $this->memberQueryHandler->loadMemberById(1);
+        $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE id = 1 ");
+        $result2 = $this->db->pselect1();
         unset($result2["id"]);
         unset($result2["lw_first_date"]);
         unset($result2["lw_last_date"]);
         $this->assertEquals($array2,$result2);
     }
     
-    public function testDeleteMember_WithExistingId($id)
+    public function testDeleteMember_WithExistingId()
     {
         // add a new member and put ID in variable (id must be 1)
         // delete member with the given $id (which should be 1)
@@ -221,51 +141,20 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->addEntry();
         
         $this->assertTrue($this->memberCommandHandler->deleteMember(1));
-        $this->assertEmpty($this->memberCommandHandler->loadMemberById(1));
+        $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE id = 1 ");
+        $this->assertEmpty($this->db->pselect1());
     }
     
-    public function testDeleteMember_WithNotExistingId($id)
+    public function testDeleteMember_WithNotExistingId()
     {
         // add a new member and put ID in variable (id must be 1)
         // delete member with an $id other than 1
         // check if delete throws an exception, telling the given ID doesn't exist
         $this->addEntry();
         
-        try{
-            $this->memberCommandHandler->deleteMember(5);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Id is not existing!");
-    }
-    
-    public function testDeleteMember_WithIdIsFalse($id) #keine id uebergeben
-    {
-        // check if delete throws an exception, telling that no ID was given
-        $this->addEntry();
-        
-        try{
-            $this->memberCommandHandler->deleteMember(false);
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Id is missing!");
-    }
-
-    public function testDeleteMember_WithIdIsNotNumeric($id)
-    {
-        // check if delete throws an exception, telling that the given ID is not numeric
-        $this->addEntry();
-        
-        try{
-            $this->memberCommandHandler->deleteMember("a");
-        } catch (Exception $e){
-            $thrownException = true;
-        }
-        $this->assertTrue($thrownException);
-        $this->assertEquals($e->getMessage(),"Id is not numeric!");
+        $this->assertTrue($this->memberCommandHandler->deleteMember(999));
+        $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE id = 999 ");
+        $this->assertEmpty($this->db->pselect1());
     }
     
     public function addEntry()
