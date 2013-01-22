@@ -28,7 +28,7 @@ class BackendController
         $this->defaultAction = "showListAction";
         $this->dic = new \lwMembersearch\Services\dic();
         $this->request = $this->dic->getLwRequest();
-        $this->response = $response;
+        $this->dispatch = \lwMembersearch\Domain\DomainEventDispatch::getInstance();
     }
     
     public function execute()
@@ -42,77 +42,95 @@ class BackendController
         }
     }
     
-    protected function returnRenderedView($view)
+    protected function showGbListAction()
     {
-        $this->response->addOutputByName('lwMembersearchOutput', $view->render());
-        return $this->response;
-    }
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getListView');
+        return $this->dispatch->execute($event);
+    }    
     
-    protected function getDomainFacade($domain)
+    protected function deleteGbAction()
     {
-        $class = "\\lwMembersearch\\Domain\\".$domain."\\Facade";
-        $facade = $class::getInstance();
-        $facade->setResponse($this->response);
-        return $facade;
+        $event = \LWddd\DomainEvent::getInstance('GB', 'deleteById')
+                ->setParameterByKey("id", $this->request->getInt("id"));
+        return $this->dispatch->execute($event);
+    }    
+    
+    protected function editGbFormAction()
+    {
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getEditFormView')
+                ->setParameterByKey("id", $this->request->getInt("id"))
+                ->setDataByKey("postArray", $this->request->getPostArray());
+        return $this->dispatch->execute($event);
+    }     
+    
+    protected function saveGbAction()
+    {
+        $event = \LWddd\DomainEvent::getInstance('GB', 'save')
+                ->setParameterByKey("id", $this->request->getInt("id"))
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        return $this->dispatch->execute($event);
+    }    
+
+    protected function addGbFormAction()
+    {
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getAddFormView')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        return $this->dispatch->execute($event);
     }
     
     protected function addGbAction()
     {
-        return $this->getDomainFacade("GB")->addGB($this->request->getPostArray());
-    }
-    
-    protected function addGbFormAction($errors=false)
-    {
-        return $this->getDomainFacade("GB")->getGbAddForm($this->request->getPostArray(), $errors);
-    }
-    
-    protected function deleteGbAction()
-    {
-        return $this->getDomainFacade("GB")->deleteGbById($this->request->getInt("id"));
-    }    
-    
-    protected function saveGbAction()
-    {
-        return $this->getDomainFacade("GB")->saveGB($this->request->getInt("id"), $this->request->getPostArray());
-    }
-    
-    protected function editGbFormAction($errors=false)
-    {
-        return $this->getDomainFacade("GB")->getGbEditForm($this->request->getInt("id"), $this->request->getPostArray(), $errors);
-    }    
-    
-    protected function showGbListAction()
-    {
-        return $this->getDomainFacade("GB")->showGbList();
-    }    
+        $event = \LWddd\DomainEvent::getInstance('GB', 'add')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        return $this->dispatch->execute($event);
+    }     
     
     protected function addFbFormAction($errors=false)
     {
-        return $this->getDomainFacade("FB")->getFbAddForm($this->request->getPostArray(), $errors);
+        $event = \LWddd\DomainEvent::getInstance('FB', 'getAddFormView')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        return $this->dispatch->execute($event);
     }
     
     protected function addFbAction()
     {
-        return $this->getDomainFacade("FB")->addFb($this->request->getInt("category_id"), $this->request->getPostArray());
+        $event = \LWddd\DomainEvent::getInstance('FB', 'add')
+                ->setDataByKey('postArray', $this->request->getPostArray())
+                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
+        return $this->dispatch->execute($event);
     }
     
     protected function editFbFormAction($errors=false)
     {
-        return $this->getDomainFacade("FB")->getFbEditForm($this->request->getInt("id"), $this->request->getPostArray(), $errors);
-    }
+        $event = \LWddd\DomainEvent::getInstance('FB', 'getEditFormView')
+                ->setDataByKey('postArray', $this->request->getPostArray())
+                ->setParameterByKey('id', $this->request->getInt("id"))
+                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
+        return $this->dispatch->execute($event);
+    }    
     
     protected function saveFbAction()
     {
-        return $this->getDomainFacade("FB")->saveFb($this->request->getInt("category_id"), $this->request->getInt("id"), $this->request->getPostArray());
+        $event = \LWddd\DomainEvent::getInstance('FB', 'save')
+                ->setDataByKey('postArray', $this->request->getPostArray())
+                ->setParameterByKey('id', $this->request->getInt("id"))
+                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
+        return $this->dispatch->execute($event);
     }
     
     protected function deleteFbAction()
     {
-        return $this->getDomainFacade("FB")->deleteFbById($this->request->getInt("category_id"), $this->request->getInt("id"));
-    }    
+        $event = \LWddd\DomainEvent::getInstance('FB', 'delete')
+                ->setParameterByKey('id', $this->request->getInt("id"))
+                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
+        return $this->dispatch->execute($event);
+    }
     
     protected function buildBackendMenuAction()
     {
-        return $this->returnRenderedView(new \lwMembersearch\View\backendMenu());
+        $response = \LWddd\Response::getInstance();
+        $view = new \lwMembersearch\View\backendMenu();
+        $response->setOutputByKey('output', $view->render());
+        return $response;
     }    
 }

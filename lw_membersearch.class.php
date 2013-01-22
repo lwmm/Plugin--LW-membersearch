@@ -27,12 +27,12 @@ class lw_membersearch extends lw_plugin
             die("Module: ".$this->params['module']);
         }
         $response = $controller->execute();
-        if ($response->hasReloadCommand()) {
-            $url = lw_page::getInstance()->getUrl($response->getReloadCommandWithParameters());
+        if ($response->getParameterByKey('cmd')) {
+            $url = lw_page::getInstance()->getUrl($response->getParameterArray());
             $this->pageReload($url);
         }
         else {
-            return $response->getOutputByName('lwMembersearchOutput');
+            return $response->getOutputByKey('output');
         }
     }
 }

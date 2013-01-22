@@ -22,11 +22,11 @@ class Form
             $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"addGb"));
         }
         else {
-            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveGb", "id" => $this->gb->getValueByKey('id')));
+            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveGb", "id" => $this->gb->getId()));
             
             if (\lwMembersearch\Domain\GB\Specification\isDeletable::getInstance()->isSatisfiedBy($this->gb)) {
                 $this->view->deleteAllowed = true;
-                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteGb","id"=>$this->gb->getValueByKey('id')));
+                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteGb","id"=>$this->gb->getId()));
             }
         }
         $this->gb->renderView($this->view);
