@@ -30,9 +30,14 @@ class EventHandler
     public function getAddFormView()
     {
         $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
+        $this->event->addEventHistory('built ValueObject from postArray ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
         $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
+        $this->event->addEventHistory('built FB entity from ValueObject ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
         $formView = new \lwMembersearch\Domain\FB\View\Form('add', $entity);
+        $this->event->addEventHistory('passed to form View ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
+        $formView->setEvent($this->event);
         $formView->setErrors($this->event->getParameterByKey('error'));
+        $this->event->addEventHistory('built FB Add Form ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
         return $this->returnRenderedView($formView);
     }
     

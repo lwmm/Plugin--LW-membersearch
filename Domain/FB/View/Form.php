@@ -12,6 +12,11 @@ class Form
         $this->view->type = $type;
     }
     
+    public function setEvent(\LWddd\DomainEvent $event)
+    {
+        $this->event = $event;
+    }
+    
     public function setErrors($errors=false)
     {
         $this->view->errors = $errors;
@@ -19,19 +24,20 @@ class Form
     
     public function render()
     {
+        $this->event->addEventHistory('used in Form View Renderer ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');           
         if ($this->view->type == "add") {
-            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"addFb", "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"addFb", "category_id"=>$this->event->getParameterByKey("categoryId")));
         }
         else {
-            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveFb", "id" => $this->object->getId(), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+            $this->view->actionUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"saveFb", "id" => $this->object->getId(), "category_id"=>$this->event->getParameterByKey("categoryId")));
             
             if (\lwMembersearch\Domain\FB\Specification\isDeletable::getInstance()->isSatisfiedBy($this->object)) {
                 $this->view->deleteAllowed = true;
-                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteFb","id"=>$this->object->getId(), "category_id"=>$this->dic->getLWRequest()->getInt("category_id")));
+                $this->view->deleteUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"deleteFb","id"=>$this->object->getId(), "category_id"=>$this->event->getParameterByKey("categoryId")));
             }
         }
         $this->object->renderView($this->view);
-        $this->view->backUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"editGbForm", "id"=>$this->dic->getLWRequest()->getInt("category_id")));
+        $this->view->backUrl = \lw_page::getInstance()->getUrl(array("cmd"=>"editGbForm", "id"=>$this->event->getParameterByKey("categoryId")));
         return $this->view->render();
     }
 }

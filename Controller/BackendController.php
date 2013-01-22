@@ -88,7 +88,8 @@ class BackendController
     protected function addFbFormAction($errors=false)
     {
         $event = \LWddd\DomainEvent::getInstance('FB', 'getAddFormView')
-                ->setDataByKey('postArray', $this->request->getPostArray());
+                ->setDataByKey('postArray', $this->request->getPostArray())
+                ->addEventHistory('Event created ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
         return $this->dispatch->execute($event);
     }
     
