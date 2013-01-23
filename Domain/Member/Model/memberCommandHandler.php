@@ -11,12 +11,16 @@ class memberCommandHandler
     public function createMemberTable()
     {
         $create_statement = "CREATE TABLE IF NOT EXISTS lw_membersearch (
-                              id bigint(11) NOT NULL AUTO_INCREMENT,
+                              id int(11) NOT NULL AUTO_INCREMENT,
                               firstname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                               lastname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                               email varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              building varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              room varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              phone varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              fax varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                               location varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-                              department varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+                              department int(11),
                               intern int(1) NOT NULL,
                               lw_first_date bigint(14) NOT NULL,
                               lw_last_date bigint(14) NOT NULL,
@@ -37,13 +41,17 @@ class memberCommandHandler
     
     public function addMember($array)
     {
-        $this->db->setStatement("INSERT INTO t:lw_membersearch ( firstname, lastname, email, location, department, intern, lw_first_date, lw_last_date ) VALUES ( :firstname, :lastname, :email, :location, :department, :intern, :lw_first_date, :lw_last_date ) ");
+        $this->db->setStatement("INSERT INTO t:lw_membersearch ( firstname, lastname, email, building, room, phone, fax, location, department, intern, lw_first_date, lw_last_date ) VALUES ( :firstname, :lastname, :email, :building, :room, :phone, :fax, :location, :department, :intern, :lw_first_date, :lw_last_date ) ");
         $this->db->bindParameter("firstname", "s", $array["firstname"]);
         $this->db->bindParameter("lastname", "s", $array["lastname"]);
         $this->db->bindParameter("email", "s", $array["email"]);
+        $this->db->bindParameter("building", "s", $array["building"]);
+        $this->db->bindParameter("room", "s", $array["room"]);
+        $this->db->bindParameter("phone", "s", $array["phone"]);
+        $this->db->bindParameter("fax", "s", $array["fax"]);
         $this->db->bindParameter("location", "s", $array["location"]);
         $this->db->bindParameter("intern", "i", $array["intern"]);
-        $this->db->bindParameter("department", "s", $array["department"]);
+        $this->db->bindParameter("department", "i", $array["department"]);
         $this->db->bindParameter("lw_first_date", "i", date("YmdHis"));
         $this->db->bindParameter("lw_last_date", "i", date("YmdHis"));
 
@@ -56,14 +64,18 @@ class memberCommandHandler
     
     public function saveMember($id, $array)
     {
-        $this->db->setStatement("UPDATE t:lw_membersearch SET firstname = :firstname, lastname = :lastname, email = :email, location = :location, department = :department, intern = :intern, lw_last_date = :lw_last_date WHERE id = :id ");
+        $this->db->setStatement("UPDATE t:lw_membersearch SET firstname = :firstname, lastname = :lastname, email = :email, building = :building, room = :room, phone = :phone, fax = :fax, location = :location, department = :department, intern = :intern, lw_last_date = :lw_last_date WHERE id = :id ");
         $this->db->bindParameter("id", "i", $id);
         $this->db->bindParameter("firstname", "s", $array["firstname"]);
         $this->db->bindParameter("lastname", "s", $array["lastname"]);
         $this->db->bindParameter("email", "s", $array["email"]);
+        $this->db->bindParameter("building", "s", $array["building"]);
+        $this->db->bindParameter("room", "s", $array["room"]);
+        $this->db->bindParameter("phone", "s", $array["phone"]);
+        $this->db->bindParameter("fax", "s", $array["fax"]);
         $this->db->bindParameter("location", "s", $array["location"]);
         $this->db->bindParameter("intern", "i", $array["intern"]);
-        $this->db->bindParameter("department", "s", $array["department"]);
+        $this->db->bindParameter("department", "i", $array["department"]);
         $this->db->bindParameter("lw_last_date", "i", date("YmdHis"));
 
         $ok = $this->db->pdbquery();

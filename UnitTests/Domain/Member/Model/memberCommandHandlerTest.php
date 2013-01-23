@@ -71,8 +71,12 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "firstname"     => "Max",
             "lastname"      => "",
             "email"         => "",
+            "building"      => "",
+            "room"          => "",
+            "phone"         => "",
+            "fax"           => "",
             "location"      => "",
-            "department"    => "",
+            "department"    => 0,
             "intern"        => 0
         );
         $this->assertTrue($this->memberCommandHandler->addMember($array));
@@ -94,8 +98,12 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "firstname"     => "Maximilia",
             "lastname"      => "Musterfrau",
             "email"         => "m.musterfrau@logic-works.de",
+            "building"      => "Ranzel01",
+            "room"          => "02",
+            "phone"         => "022133665544",
+            "fax"           => "022133665544-22",
             "location"      => "Germany",
-            "department"    => "Office",
+            "department"    => 1,
             "intern"        => 1
         );
         
@@ -118,8 +126,12 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "firstname"     => "",
             "lastname"      => "",
             "email"         => "",
+            "building"      => "",
+            "room"          => "",
+            "phone"         => "",
+            "fax"           => "",
             "location"      => "",
-            "department"    => "",
+            "department"    => 0,
             "intern"        => 0
         );
         
@@ -163,8 +175,12 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
             "firstname"     => "Max",
             "lastname"      => "Mustermann",
             "email"         => "m.mustermann@logic-works.de",
+            "building"      => "Ranzel02",
+            "room"          => "01",
+            "phone"         => "02211553366",
+            "fax"           => "02211553366-55",
             "location"      => "Germany",
-            "department"    => "Office",
+            "department"    => 1,
             "intern"        => 0
         );
         $this->assertTrue($this->memberCommandHandler->addMember($array));

@@ -40,9 +40,17 @@ class isValid extends \LWddd\Validator
     
     public function nameValidate($key, $object)
     {
+        $bool = true;
+        if(!$this->isRequired($object->getValueByKey($key))){
+            $this->addError($key, LW_REQUIRED_ERROR);
+            $bool = false;
+        }
         $maxlength = 255;
         if (!$this->hasMaxlength($object->getValueByKey($key), array("maxlength"=>$maxlength)) ) {
             $this->addError($key, LW_MAXLENGTH_ERROR, array("maxlength"=>$maxlength));
+            $bool = false;
+        }
+        if(!$bool){
             return false;
         }
         return true;
@@ -50,12 +58,24 @@ class isValid extends \LWddd\Validator
     
     public function opt1textValidate($key, $object)
     {
+        $bool = true;
+        if(!$this->isRequired($object->getValueByKey($key))){
+            $this->addError($key, LW_REQUIRED_ERROR);
+            $bool = false;
+        }
         $maxlength = 10;
         if (!$this->hasMaxlength($object->getValueByKey($key), array("maxlength"=>$maxlength)) ) {
             $this->addError($key, LW_MAXLENGTH_ERROR, array("maxlength"=>$maxlength));
+            $bool = false;
+        }
+        if(!$bool){
             return false;
         }
         return true;
-    }
+    }   
     
+    public function resetErrors()
+    {
+        \LWddd\Validator::resetErrors();
+    }
 }
