@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+require_once dirname(__FILE__) . '/../../../../../lw_ddd/commandLogsHandler.php';
 require_once dirname(__FILE__) . '/../../../../Domain/FB/Model/CommandHandler.php';
 require_once dirname(__FILE__) . '/../../../../../../../../c_libraries/lw/lw_object.class.php';
 require_once dirname(__FILE__) . '/../../../../../../../../c_libraries/lw/lw_db.class.php';
@@ -33,6 +34,7 @@ class CommandHandlerTest_fb extends \PHPUnit_Framework_TestCase {
         
         $this->commandHandler = new \lwMembersearch\Domain\FB\Model\CommandHandler($this->db);
         $this->assertTrue($this->createTable());
+        $this->assertTrue($this->createLogTable());
     }
 
     /**
@@ -69,7 +71,6 @@ class CommandHandlerTest_fb extends \PHPUnit_Framework_TestCase {
         );
         
         $this->assertTrue($this->commandHandler->saveEntity($id,$array));
-        
         $this->db->setStatement("SELECT * FROM t:lw_master WHERE id = :id ");
         $this->db->bindParameter("id", "i", $id);
         $result = $this->db->pselect1();
@@ -181,8 +182,21 @@ class CommandHandlerTest_fb extends \PHPUnit_Framework_TestCase {
                                   lw_removed int(11) DEFAULT NULL,
                                   lw_instance varchar(25) DEFAULT NULL,
                                   PRIMARY KEY (id)
-                                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=116 ; ");
+                                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ; ");
         
+        return $this->db->pdbquery();
+    }
+    
+    public function createLogTable()
+    {
+        $this->db->setStatement("CREATE TABLE IF NOT EXISTS lw_command_log (
+                                  id int(11) NOT NULL AUTO_INCREMENT,
+                                  project varchar(255) NOT NULL,
+                                  domain varchar(22) NOT NULL,
+                                  statement longtext NOT NULL,
+                                  date varchar(20) NOT NULL,
+                                  PRIMARY KEY (id)
+                                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ; ");
         return $this->db->pdbquery();
     }
 }

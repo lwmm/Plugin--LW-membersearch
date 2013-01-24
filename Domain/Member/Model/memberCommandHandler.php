@@ -1,13 +1,25 @@
 <?php
 namespace lwMembersearch\Domain\Member\Model;
+use \LWddd\commandLogsHandler as commandLogsHandler;
 
 class memberCommandHandler
 {
     public function __construct($db)
     {
         $this->db = $db;
+        $this->commandLogsHandler = new commandLogsHandler($db);
+        $this->logArray = array(
+            "project"   => "lwMembersearch",
+            "domain"    => "Member",
+            "statement" => ""
+        );
     }
     
+    /**
+     * Creation of lw_membersearch table
+     * @return boolean
+     * @throws Exception
+     */
     public function createMemberTable()
     {
         $create_statement = "CREATE TABLE IF NOT EXISTS lw_membersearch (
@@ -39,6 +51,12 @@ class memberCommandHandler
         return true;
     }
     
+    /**
+     * A new member will be added
+     * @param array $array
+     * @return boolean
+     * @throws \Exception
+     */
     public function addMember($array)
     {
         $this->db->setStatement("INSERT INTO t:lw_membersearch ( firstname, lastname, email, building, room, phone, fax, location, department, intern, lw_first_date, lw_last_date ) VALUES ( :firstname, :lastname, :email, :building, :room, :phone, :fax, :location, :department, :intern, :lw_first_date, :lw_last_date ) ");
@@ -55,13 +73,22 @@ class memberCommandHandler
         $this->db->bindParameter("lw_first_date", "i", date("YmdHis"));
         $this->db->bindParameter("lw_last_date", "i", date("YmdHis"));
 
+        $this->logArray["statement"] = $this->db->prepare();
         $ok = $this->db->pdbquery();
         if(!$ok){
             throw new \Exception('ERROR: "addMemer"');
         }
+        $this->commandLogsHandler->addLog($this->logArray);
         return true;    
     }
     
+    /**
+     * A member with certain id will be updated
+     * @param int $id
+     * @param array $array
+     * @return boolean
+     * @throws \Exception
+     */
     public function saveMember($id, $array)
     {
         $this->db->setStatement("UPDATE t:lw_membersearch SET firstname = :firstname, lastname = :lastname, email = :email, building = :building, room = :room, phone = :phone, fax = :fax, location = :location, department = :department, intern = :intern, lw_last_date = :lw_last_date WHERE id = :id ");
@@ -78,22 +105,32 @@ class memberCommandHandler
         $this->db->bindParameter("department", "i", $array["department"]);
         $this->db->bindParameter("lw_last_date", "i", date("YmdHis"));
 
+        $this->logArray["statement"] = $this->db->prepare();
         $ok = $this->db->pdbquery();
         if(!$ok){
             throw new \Exception('ERROR: "saveMemer"');
         }
+        $this->commandLogsHandler->addLog($this->logArray);
         return true;    
     }
     
+    /**
+     * A member with certain id will be deleted
+     * @param int $id
+     * @return boolean
+     * @throws \Exception
+     */
     public function deleteMember($id)
     {
         $this->db->setStatement("DELETE FROM t:lw_membersearch WHERE id = :id ");
         $this->db->bindParameter("id", "i", $id);
 
+        $this->logArray["statement"] = $this->db->prepare();
         $ok = $this->db->pdbquery();
         if(!$ok){
             throw new \Exception('ERROR: "deleteMemer"');
         }
+        $this->commandLogsHandler->addLog($this->logArray);
         return true;    
     }
 }

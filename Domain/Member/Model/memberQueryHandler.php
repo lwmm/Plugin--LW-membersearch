@@ -9,6 +9,12 @@ class memberQueryHandler
         $this->db = $db;
     }
 
+    /**
+     * A member with certain id and status ( intern ) will be loaded
+     * @param int $id
+     * @param bool $intern
+     * @return array
+     */
     public function loadMemberById($id, $intern=false)
     {
         $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE id = :id AND intern = :intern ");
@@ -21,6 +27,12 @@ class memberQueryHandler
         return $this->db->pselect1();
     }
     
+    /**
+     * All member will be loaded if intern = true,
+     * All non intern members will be loaded if intern = false
+     * @param bool $intern
+     * @return array
+     */
     public function loadAllMembers($intern=false)
     {
         if(!$intern){
@@ -33,20 +45,33 @@ class memberQueryHandler
         return $this->db->pselect();
     }
     
+    /**
+     * All member with certain department will be loaded if intern = true,
+     * All non intern members with certain department will be loaded if intern = false
+     * @param int $department
+     * @param bool $intern
+     * @return array
+     */
     public function loadMembersByDepartment($department, $intern=false)
     {
         if(!$intern){
             $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE department = :department AND intern = :intern ");
-            $this->db->bindParameter("department", "s", $department);
+            $this->db->bindParameter("department", "i", $department);
             $this->db->bindParameter("intern", "i", 0);
         }else{
             $this->db->setStatement("SELECT * FROM t:lw_membersearch WHERE department = :department ");
-            $this->db->bindParameter("department", "s", $department);
+            $this->db->bindParameter("department", "i", $department);
         }
         
         return $this->db->pselect();
     }
     
+    /**
+     * All member with certain firstname and status will be loaded
+     * @param string $name
+     * @param bool $intern
+     * @return array
+     */
     public function loadMembersByName($name, $intern=false)
     {
         if(!$intern){
@@ -61,6 +86,12 @@ class memberQueryHandler
         return $this->db->pselect();
     }
 
+    /**
+     * All member with certain location and status will be loaded
+     * @param string $location
+     * @param bool $intern
+     * @return array
+     */
     public function loadMembersByLocation($location, $intern=false)
     {
         if(!$intern){
@@ -75,6 +106,12 @@ class memberQueryHandler
         return $this->db->pselect();
     }
 
+    /**
+     * All member which fits to the filterArray and status will be loaded
+     * @param array $filterArray
+     * @param bool $intern
+     * @return array
+     */
     public function loadMembersByFilter($filterArray, $intern=false)
     {    
          if(!$intern){

@@ -31,6 +31,11 @@ class isValid extends \LWddd\Validator
         return new isValid();
     }
     
+    /**
+     * Validation of given and allowedKeys
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function isSatisfiedBy(\lwMembersearch\Domain\Member\Object\member $object)
     {
         $valid = true;
@@ -46,6 +51,12 @@ class isValid extends \LWddd\Validator
         return $valid;
     }
     
+    /**
+     * firstname validation -> required check and maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function firstnameValidate($key, $object)
     {
         $bool = true;
@@ -64,6 +75,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * lastname validation -> required check and maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function lastnameValidate($key, $object)
     {
         $bool = true;
@@ -82,6 +99,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * email validation -> required check and isemail check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function emailValidate($key, $object)
     {
         $bool = true;
@@ -100,6 +123,12 @@ class isValid extends \LWddd\Validator
         return true;
     } 
     
+    /**
+     * building validation -> maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function buildingValidate($key, $object)
     {
         $maxlength = 255;
@@ -110,6 +139,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * room validation -> maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function roomValidate($key, $object)
     {
         $maxlength = 255;
@@ -120,6 +155,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * phone validation -> maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function phoneValidate($key, $object)
     {
         $maxlength = 255;
@@ -130,6 +171,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * fax validation -> maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function faxValidate($key, $object)
     {
         $maxlength = 255;
@@ -140,6 +187,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * location validation -> maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\Member\Object\member $object
+     * @return boolean
+     */
     public function locationValidate($key, $object)
     {
         $maxlength = 20;
@@ -150,6 +203,9 @@ class isValid extends \LWddd\Validator
         return true;
     } 
     
+    /**
+     * reset error array
+     */
     public function resetErrors()
     {
         \LWddd\Validator::resetErrors();

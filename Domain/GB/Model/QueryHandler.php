@@ -11,6 +11,10 @@ class QueryHandler
         $this->type = "lw_membersearch_gb";
     }
     
+    /**
+     * All "Geschaeftsbereiche" will be loaded
+     * @return array
+     */
     public function loadAllEntries()
     {
         $this->db->setStatement("SELECT * FROM t:".$this->table." WHERE lw_object = :type ORDER BY name ");
@@ -19,6 +23,11 @@ class QueryHandler
         return $this->db->pselect();
     }
     
+    /**
+     * A "Geschaeftsbreich" with certain id will be loaded
+     * @param int $id
+     * @return array
+     */
     public function loadObjectById($id)
     {
         $this->db->setStatement("SELECT * FROM t:".$this->table." WHERE lw_object = :type AND id = :id ORDER BY name ");

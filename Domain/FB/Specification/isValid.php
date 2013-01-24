@@ -24,6 +24,11 @@ class isValid extends \LWddd\Validator
         return new isValid();
     }
     
+    /**
+     * Validation of given and allowedKeys
+     * @param \lwMembersearch\Domain\FB\Object\fb $object
+     * @return boolean
+     */
     public function isSatisfiedBy(\lwMembersearch\Domain\FB\Object\fb $object)
     {
         $valid = true;
@@ -39,6 +44,12 @@ class isValid extends \LWddd\Validator
         return $valid;
     }
     
+    /**
+     * Name validation -> required check and maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\FB\Object\fb $object
+     * @return boolean
+     */
     public function nameValidate($key, $object)
     {
         $bool = true;
@@ -57,6 +68,12 @@ class isValid extends \LWddd\Validator
         return true;
     }
     
+    /**
+     * opt1text validation -> required check and maxlength check
+     * @param arraykey $key
+     * @param \lwMembersearch\Domain\FB\Object\fb $object
+     * @return boolean
+     */
     public function opt1textValidate($key, $object)
     {
         $bool = true;
@@ -75,6 +92,9 @@ class isValid extends \LWddd\Validator
         return true;
     }   
     
+    /**
+     * reset of error array
+     */
     public function resetErrors()
     {
         \LWddd\Validator::resetErrors();

@@ -30,8 +30,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         $this->db = $db;
         
         $this->memberQueryHandler   = new \lwMembersearch\Domain\Member\Model\memberQueryHandler($this->db);
-        $this->memberCommandHandler = new \lwMembersearch\Domain\Member\Model\memberCommandHandler($this->db);
-        $this->assertTrue($this->memberCommandHandler->createMemberTable());
+        $this->assertTrue($this->createTable());
         $this->fillTable();
     }
 
@@ -347,7 +346,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         // intern = (false)
         // check if an empty array is returned
         $this->tearDown();
-        $this->assertTrue($this->memberCommandHandler->createMemberTable());
+        $this->assertTrue($this->createTable());
         $this->assertEmpty($this->memberQueryHandler->loadAllMembers());
     }
     
@@ -628,7 +627,7 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
                 )
         );
         foreach($array as $value){
-            $this->assertTrue($this->memberCommandHandler->addMember($value));
+            $this->assertTrue($this->addMember($value));
         }
         // intern = (false)
         // check if an array with all members and only members with the given first name, that are not intern, is returned
@@ -1524,7 +1523,48 @@ class memberQueryHandlerTest extends \PHPUnit_Framework_TestCase {
         );
 
         foreach($array as $value){
-            $this->assertTrue($this->memberCommandHandler->addMember($value));
+            $this->assertTrue($this->addMember($value));
         }
+    }
+    
+    public function addMember($value)
+    {
+        $this->db->setStatement("INSERT INTO t:lw_membersearch ( firstname, lastname, email, building, room, phone, fax, location, department, intern, lw_first_date, lw_last_date ) VALUES ( :firstname, :lastname, :email, :building, :room, :phone, :fax, :location, :department, :intern, :lw_first_date, :lw_last_date ) ");
+        $this->db->bindParameter("firstname", "s", $value["firstname"]);
+        $this->db->bindParameter("lastname", "s", $value["lastname"]);
+        $this->db->bindParameter("email", "s", $value["email"]);
+        $this->db->bindParameter("building", "s", $value["building"]);
+        $this->db->bindParameter("room", "s", $value["room"]);
+        $this->db->bindParameter("phone", "s", $value["phone"]);
+        $this->db->bindParameter("fax", "s", $value["fax"]);
+        $this->db->bindParameter("location", "s", $value["location"]);
+        $this->db->bindParameter("intern", "i", $value["intern"]);
+        $this->db->bindParameter("department", "i", $value["department"]);
+        $this->db->bindParameter("lw_first_date", "i", date("YmdHis"));
+        $this->db->bindParameter("lw_last_date", "i", date("YmdHis"));
+
+        return $this->db->pdbquery();
+    }
+    
+    public function createTable()
+    {
+        $this->db->setStatement("CREATE TABLE IF NOT EXISTS lw_membersearch (
+                              id int(11) NOT NULL AUTO_INCREMENT,
+                              firstname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              lastname varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              email varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              building varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              room varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              phone varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              fax varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                              location varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+                              department int(11),
+                              intern int(1) NOT NULL,
+                              lw_first_date bigint(14) NOT NULL,
+                              lw_last_date bigint(14) NOT NULL,
+                              PRIMARY KEY (id)
+                            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;");
+        
+        return $this->db->pdbquery();
     }
 }

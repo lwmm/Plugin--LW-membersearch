@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+require_once dirname(__FILE__) . '/../../../../../lw_ddd/commandLogsHandler.php';
 require_once(dirname(__FILE__) . '/../../../../Domain/Member/Model/memberCommandHandler.php');
 require_once dirname(__FILE__) . '/../../../../../../../../c_libraries/lw/lw_object.class.php';
 require_once dirname(__FILE__) . '/../../../../../../../../c_libraries/lw/lw_db.class.php';
@@ -26,6 +27,7 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
    
         $this->memberCommandHandler = new lwMembersearch\Domain\Member\Model\memberCommandHandler($this->db);
         $this->assertTrue($this->memberCommandHandler->createMemberTable());
+        $this->assertTrue($this->createLogTable());
     }
 
     /**
@@ -191,5 +193,18 @@ class memberCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         unset($result["lw_last_date"]);
         
         $this->assertEquals($array,$result);
+    }
+    
+    public function createLogTable()
+    {
+        $this->db->setStatement("CREATE TABLE IF NOT EXISTS lw_command_log (
+                                  id int(11) NOT NULL AUTO_INCREMENT,
+                                  project varchar(255) NOT NULL,
+                                  domain varchar(22) NOT NULL,
+                                  statement longtext NOT NULL,
+                                  date varchar(20) NOT NULL,
+                                  PRIMARY KEY (id)
+                                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ; ");
+        return $this->db->pdbquery();
     }
 }

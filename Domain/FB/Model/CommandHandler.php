@@ -1,6 +1,7 @@
 <?php
 
 namespace lwMembersearch\Domain\FB\Model;
+use \LWddd\commandLogsHandler as commandLogsHandler;
 
 class CommandHandler
 {
@@ -9,11 +10,17 @@ class CommandHandler
         $this->table = "lw_master";
         $this->db = $db;
         $this->type = "lw_membersearch_fb";
+        $this->commandLogsHandler = new commandLogsHandler($db);
+        $this->logArray = array(
+            "project"   => "lwMembersearch",
+            "domain"    => "FB",
+            "statement" => ""
+        );
     }
         
     /**
-     * Creation of a new Event
-     * @param \LWddd\ValueObject $entity
+     * Creation of a new "Fachbereich"
+     * @param array $array
      * @return true/exception
      */
     public function addEntity($array)
@@ -25,13 +32,20 @@ class CommandHandler
         $this->db->bindParameter("shortcut", "s", $array['opt1text']);
         $this->db->bindParameter("first_date", "s", date("YmdHis"));
         $this->db->bindParameter("last_date", "s", date("YmdHis"));
-        return $this->db->pdbinsert($this->table);
+
+        $this->logArray["statement"] = $this->db->prepare();
+        $id = $this->db->pdbinsert($this->table);
+        if($id > 0) {
+            $this->commandLogsHandler->addLog($this->logArray);
+            return $id;
+        }
+        return false;
     }
     
     /**
-     * An Event with certain id will be updated
+     * A "Fachbereich" with certain id will be updated
      * @param int $id
-     * @param \LWddd\ValueObject $entity
+     * @param array $array
      * @return true/exception
      */
     public function saveEntity($id, $array)
@@ -42,14 +56,33 @@ class CommandHandler
         $this->db->bindParameter("name", "s", $array['name']);
         $this->db->bindParameter("shortcut", "s", $array['opt1text']);
         $this->db->bindParameter("last_date", "s", date("YmdHis"));
-        return $this->db->pdbquery();
+        
+        $this->logArray["statement"] = $this->db->prepare();
+        $ok =  $this->db->pdbquery();
+        if($ok) {
+            $this->commandLogsHandler->addLog($this->logArray);
+            return true;
+        }
+        return false;
     }
     
+    /**
+     * A "Fachbereich" with certain id will be deleted
+     * @param int $id
+     * @return boolean
+     */
     public function deleteEntityById($id)
     {
         $this->db->setStatement("DELETE FROM t:".$this->table." WHERE id = :id AND lw_object = :lw_object ");
         $this->db->bindParameter("lw_object", "s", $this->type);
         $this->db->bindParameter("id", "i", $id);
-        return $this->db->pdbquery();
+        
+        $this->logArray["statement"] = $this->db->prepare();
+        $ok =  $this->db->pdbquery();
+        if($ok) {
+            $this->commandLogsHandler->addLog($this->logArray);
+            return true;
+        }
+        return false;
     }
 }
